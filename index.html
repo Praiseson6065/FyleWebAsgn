@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tax Calculator</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <div id="Modal" class="modal my-5">
+      <div class="row justify-content-center align-items-center">
+        <div class="col-md-6">
+          <div class="card p-3">
+            <div class="d-block text-center">
+              <strong class="h3">Your Overall Income will be : </strong
+              ><br><strong class="h3"><span id="tax"></span></strong> <br>after tax deductions.
+            </div>
+            <div class="d-block">
+              <button class="btn btn-dark btn-block" id="close">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container my-5">
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-body">
+              <form onsubmit="CalcTax() ; return false;">
+                <div class="form-group">
+                  <label for="grossAnnualIncome"
+                    ><strong>Enter gross annual income</strong>
+                    <span
+                      class="text-info"
+                      data-toggle="tooltip"
+                      data-placement="right"
+                      title="Gross annual income is your total salary in a year before any deductions."
+                      ><img
+                        width="24"
+                        src="./Assets/question-line.svg"
+                        alt="info" /></span
+                  ></label>
+                  <div class="input-group">
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="gross-annual-income"
+                      aria-describedby="gross-annual-income-tooltip"
+                    />
+                    <div class="input-group-append">
+                      <span
+                        class="input-group-text"
+                        id="gross-annual-income-tooltip"
+                        data-toggle="tooltip"
+                        data-placement="right"
+                        title="Enter Numbers Only"
+                      >
+                        <img
+                          width="24"
+                          src="./Assets/information-line.svg"
+                          alt=""
+                        />
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="extraIncome"
+                    ><strong>Enter extra income</strong>
+                    <span
+                      class="text-info"
+                      data-toggle="tooltip"
+                      data-placement="right"
+                      title="Gross annual income is your total salary in a year before any deductions."
+                      ><img
+                        width="24"
+                        src="./Assets/question-line.svg"
+                        alt="info" /></span
+                  ></label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="extraIncome"
+                    placeholder="Enter extra income from other sources"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="ageGroup"
+                    ><strong>Enter age group</strong>
+                    <span
+                      class="text-info"
+                      data-toggle="tooltip"
+                      data-placement="right"
+                      title="Gross annual income is your total salary in a year before any deductions."
+                      ><img
+                        width="24"
+                        src="./Assets/question-line.svg"
+                        alt="info" /></span
+                  ></label>
+                  <select class="form-control" id="ageGroup">
+                    <option selected disabled>Select age group</option>
+                    <option value="0.3">< 40yrs</option>
+                    <option value="0.4">>=40yrs & < 60yrs</option>
+                    <option value="0.1">>=60yrs</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="deductions"
+                    ><strong>Enter total applicable deductions</strong>
+                    <span
+                      class="text-info"
+                      data-toggle="tooltip"
+                      data-placement="right"
+                      title="Gross annual income is your total salary in a year before any deductions."
+                      ><img
+                        width="24"
+                        src="./Assets/question-line.svg"
+                        alt="info" /></span
+                  ></label>
+                  <input type="text" class="form-control" id="deductions" />
+                </div>
+                <input
+                  type="submit"
+                  value="Submit"
+                  class="btn btn-primary btn-block"
+                />
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+      $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+      });
+
+      function CalcTax() {
+        event.preventDefault();
+        var grossAnnualIncome = parseFloat(
+          document.getElementById("gross-annual-income").value
+        );
+        var extraIncome = parseFloat(
+          document.getElementById("extraIncome").value
+        );
+        var ageGroup = parseFloat(document.getElementById("ageGroup").value);
+        var deductions = parseFloat(
+          document.getElementById("deductions").value
+        );
+        var Income = document.getElementById("tax");
+        console.log(grossAnnualIncome, extraIncome, ageGroup, deductions);
+        if (isNaN(grossAnnualIncome) || isNaN(extraIncome) || isNaN(deductions) || isNaN(ageGroup)) {
+          alert("Please fill all fields");
+          return;
+        } else if (grossAnnualIncome + extraIncome - deductions < 0) {
+          alert("Please enter valid values");
+          return;
+        } else if (grossAnnualIncome + extraIncome - deductions <= 800000) {
+          Income.innerHTML = grossAnnualIncome + extraIncome - deductions;
+          $("#Modal").modal("show");
+          return;
+        } else {
+          Income.innerHTML =
+            (grossAnnualIncome + extraIncome - deductions) * (1 - ageGroup);
+          $("#Modal").modal("show");
+          return;
+        }
+      }
+      $("#Modal").on("click", "#close", function () {
+        $("#Modal").modal("hide");
+      });
+    </script>
+  </body>
+</html>
