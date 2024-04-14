@@ -173,7 +173,7 @@
           return;
         } else {
           Income.innerHTML =
-            (grossAnnualIncome + extraIncome - deductions) * (1 - ageGroup);
+            (grossAnnualIncome + extraIncome - deductions -800000) * (1 - ageGroup) + 800000 ;
           $("#Modal").modal("show");
           return;
         }
